@@ -1,0 +1,21 @@
+# This is a comment in a property file
+# Theme file must have .thm or .theme extension for file dialog filters
+# This is an example of a Theme contained in a property file.
+# Use a CustomTheme object to load it.
+
+# font style values - (1)Font.BOLD (2)Font.ITALIC (3)Font.PLAIN (4)Font.BOLD|Font.ITALIC
+
+name=Aqua
+softWhite=165,157,143
+
+primary1=102,153,153
+primary2=128,192,192
+primary3=159,235,235
+
+secondary1=35,33,29
+secondary2=105,99,87
+secondary3=92,87,76
+
+white=255,255,255
+
+menuitemselectedbackground=153,153,204

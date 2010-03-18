@@ -1,0 +1,19 @@
+# This is a comment in a property file
+# Theme file must have .thm or .theme extension for file dialog filters
+# This is an example of a Theme contained in a property file.
+# Use a CustomTheme object to load it.
+
+# font style values - (1)Font.BOLD (2)Font.ITALIC (3)Font.PLAIN (4)Font.BOLD|Font.ITALIC
+
+primary1=66,33,66
+primary2=90,86,99
+primary3=99,99,99
+
+secondary1=0,0,0
+secondary2=51,51,51
+secondary3=102,102,102
+
+black=222,222,222
+white=0,0,0
+
+menuitemselectedbackground=153,153,204

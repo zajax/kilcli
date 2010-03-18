@@ -1,0 +1,8 @@
+C:skipoutput
+G:w;;e;;w;;e;;g gold;;aim%
+C:if gilled = 1|1
+O:test
+C:if HPs < 250|1
+C:script healandwait
+C:if HPs > 0|1
+C:script squids

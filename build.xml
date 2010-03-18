@@ -1,0 +1,76 @@
+<project name="KilCli" default="compile" basedir=".">
+    <description>
+        Kilcli Build File
+    </description>
+	
+  <property name="path.src" location="src" />
+  <property name="path.build" location="bin" />
+  <property name="path.build.classes" location="bin/classes" />
+  <property name="path.src.resources" location="src/resources" />
+  <property name="path.dist"  location="dist" />
+  <property name="path.build.lib" value="bin/lib" />
+  <property name ="path.src.lib" value="src/lib" />
+    <path id="compile.classpath">
+        <fileset dir="${path.build}">
+            <include name="lib/*.jar"/>
+        </fileset>
+    </path>
+  <target name="init">
+    <tstamp/>
+  	 <mkdir dir="${path.build}" />
+  	 <mkdir dir="${path.build.classes}"/>
+  	 <mkdir dir="${path.build.lib}"  />
+  	 <mkdir dir="${path.dist}" />
+  	
+
+  </target>
+
+  <target name="compile" depends="init"   description="compile the source " >
+	<copy todir="${path.build.lib}">
+	    <fileset dir="${path.src.lib}"/>
+	  </copy>
+  	
+    <javac srcdir="${path.src}" destdir="${path.build.classes}">
+    	<classpath refid="compile.classpath" />
+    </javac>
+  	<pathconvert property="mf.classpath" pathsep=" " > 
+  		<path refid="compile.classpath" />  
+  		<chainedmapper>
+  		  <flattenmapper/>
+  		  <globmapper from="*" to="lib/*"/>
+  		</chainedmapper>
+  	</pathconvert>
+
+  	<jar destfile="${path.build}/kilcli.jar" basedir="${path.build.classes}">
+        <manifest>
+            <attribute name="Main-Class" value="terris.kilcli.KilCli"/>
+        	<attribute name="Class-Path" value="${mf.classpath}" />
+        </manifest>
+  	 </jar>
+  	
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${build.dist}"/>
+  	
+  	<copy todir="${path.dist}">
+  	    <fileset dir="${path.src.resources}" />
+  	  </copy>
+  	
+  	<copy todir="${path.dist}/lib">
+  		    <fileset dir="${path.build.lib}"/>
+  	</copy>
+
+  	 <copy file="${path.build}/kilcli.jar" todir="${path.dist}"/>
+  	
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${path.build}"/>
+    <delete dir="${path.dist}"/>
+  </target>
+</project>

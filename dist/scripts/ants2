@@ -1,0 +1,6 @@
+C:skipoutput
+G:w;;e;;w;;e;;aim red ant;;aim%
+C:if HPs < 250|1
+C:script healandwait
+C:if HPs > 0|1
+C:script ants2
