@@ -1,2 +1,21 @@
 Bad text routing.  Tempchar=1
 java.lang.NullPointerException
+java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:218)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:258)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:317)
+	at terris.kilcli.io.SendReceive.netRead(Unknown Source)
+	at terris.kilcli.io.SendReceive.Receive(Unknown Source)
+	at terris.kilcli.io.SendReceive.establishConnection(Unknown Source)
+	at terris.kilcli.io.SendReceive.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:637)
+Error while closing socket.
+java.net.SocketException: Connection reset
+error while disconnecting
+exit=
+Error while closing socket.
+java.net.SocketException: Connection reset
+error while disconnecting
+exit=

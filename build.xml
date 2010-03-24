@@ -15,14 +15,13 @@
             <include name="lib/*.jar"/>
         </fileset>
     </path>
+	
+	
   <target name="init">
     <tstamp/>
   	 <mkdir dir="${path.build}" />
   	 <mkdir dir="${path.build.classes}"/>
   	 <mkdir dir="${path.build.lib}"  />
-  	 <mkdir dir="${path.dist}" />
-  	
-
   </target>
 
   <target name="compile" depends="init"   description="compile the source " >
@@ -53,8 +52,7 @@
   <target name="dist" depends="compile"
         description="generate the distribution" >
     <!-- Create the distribution directory -->
-    <mkdir dir="${build.dist}"/>
-  	
+  	 <mkdir dir="${path.dist}" />
   	<copy todir="${path.dist}">
   	    <fileset dir="${path.src.resources}" />
   	  </copy>
