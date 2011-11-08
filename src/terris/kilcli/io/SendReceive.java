@@ -206,7 +206,7 @@ public class SendReceive implements Runnable {
 		//attempts to establish a connection
 		try {
 			if (gameNumber == 0) {
-				server = "81.138.236.173";
+				server = "ogcserver02.onlinegamescompany.net";
 				port = 31000;
 			} else if (gameNumber == 1) {
 				server = "ogcserver03.onlinegamescompany.net";
