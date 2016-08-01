@@ -31,24 +31,21 @@ package terris.kilcli.io;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketException;
-import java.net.Socket;
-import java.net.NoRouteToHostException;
-import java.net.UnknownHostException;
-import java.net.ConnectException;
-import java.util.ArrayList;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketException;
+
 import javax.swing.Timer;
-import terris.kilcli.*;
-import terris.kilcli.io.*;
-import terris.kilcli.window.*;
-import terris.kilcli.thread.*;
-import terris.kilcli.resource.*;
+
+import terris.kilcli.KilCli;
+import terris.kilcli.resource.SMTPClient;
+import terris.kilcli.thread.KilCliThread;
+import terris.kilcli.thread.ScriptExecuteThread;
+import terris.kilcli.thread.TriggerThread;
+import terris.kilcli.window.InfoPanel;
 
 /**
  * SendReceive for KilCli is the class used to send and receive<br>
@@ -59,8 +56,8 @@ import terris.kilcli.resource.*;
 public class SendReceive implements Runnable {
 
 	private static int netBufferSize = 2048;
-	private byte nextLine[] = new byte[2];
-	private String newLine;
+	private final byte nextLine[] = new byte[2];
+	private final String newLine;
 
 	private Socket connSock;
 	private BufferedOutputStream outStream;
@@ -76,7 +73,7 @@ public class SendReceive implements Runnable {
 	private Thread receiveThread = null;
 	private byte netBuffer[] = null;
     private String tempString1 = "";
-    private Timer quitCountDown;
+    private final Timer quitCountDown;
     //private Timer encryptDelay;
     private String lastLine = "";
     private String carryOver = "";
@@ -89,7 +86,7 @@ public class SendReceive implements Runnable {
     //private static final BASE64Encoder encoder = new BASE64Encoder();
     //private ArrayList encryptDelayList = new ArrayList();
     //private int sentEncryptCount = 0;
-    private String charSet = "windows-1253";
+    private final String charSet = "windows-1253";
 
 	/**
 	 * Creates a SendReceive object set to connect to the
@@ -105,6 +102,7 @@ public class SendReceive implements Runnable {
 		newLine = new String(nextLine);
 		//timer to make sure we quit the game
 		quitCountDown = new Timer(4000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				quitCountDown.stop();
 				loggedIn = false;
@@ -165,7 +163,8 @@ public class SendReceive implements Runnable {
 	 * to the remove server
 	 */
 
-    public void run() {
+    @Override
+	public void run() {
         Thread myThread = Thread.currentThread();
         establishConnection();
     }
@@ -206,13 +205,10 @@ public class SendReceive implements Runnable {
 		//attempts to establish a connection
 		try {
 			if (gameNumber == 0) {
-				server = "ogcserver02.onlinegamescompany.net";
+				server = "ogcserver02.onlinegamescompany.net";								
 				port = 31000;
 			} else if (gameNumber == 1) {
-				server = "ogcserver03.onlinegamescompany.net";
-				port = 31000;
-			} else if (gameNumber == 2) {
-				server = "ogcserver01.onlinegamescompany.net";
+				server = "play.cosrintwo.com";
 				port = 31000;
 			}
 			connectToServer(server, port);
@@ -224,11 +220,9 @@ public class SendReceive implements Runnable {
 			try {
 				connSock.close();
 				if (gameNumber == 0) {
-					server = "81.138.236.173";
+					server = "217.35.88.197";
 				} else if (gameNumber == 1) {
-					server = "217.29.193.246";
-				} else if (gameNumber == 2) {
-					server = "217.29.193.218";
+					server = "81.143.167.18";
 				}
 				connectToServer(server, port);
 				outStream = new BufferedOutputStream(connSock.getOutputStream());
@@ -274,10 +268,10 @@ public class SendReceive implements Runnable {
                	connSock = new Socket(server, port);
                	connSock.setTcpNoDelay(true);
 			} else if (KilCli.getProxyType().equalsIgnoreCase("Socks5")) {
-				connSock = (Socket)new SocksSocket(sockHost, sockPort, KilCli.getProxyUsername(), KilCli.getProxyPassword(), server, port);
+				connSock = new SocksSocket(sockHost, sockPort, KilCli.getProxyUsername(), KilCli.getProxyPassword(), server, port);
 				connSock.setTcpNoDelay(true);
 			} else if (KilCli.getProxyType().equalsIgnoreCase("HTTP Tunnel")) {
-				connSock = (Socket)new HTTPSocket(sockHost, sockPort, KilCli.getProxyUsername(), KilCli.getProxyPassword(), server, port);
+				connSock = new HTTPSocket(sockHost, sockPort, KilCli.getProxyUsername(), KilCli.getProxyPassword(), server, port);
 				connSock.setTcpNoDelay(true);
 			} else {
 				KilCli.gameWrite("Unrecognized proxy type, using direct connection");
@@ -438,7 +432,7 @@ public class SendReceive implements Runnable {
 
 	public boolean disconnect(String quit) {
 		String exit = "";
-
+		
 		try {
 			if (loggedIn) {
 				quitCountDown.start();
@@ -744,17 +738,12 @@ public class SendReceive implements Runnable {
 				}
 			} else {
 				//get character names
-				stringSearchIndex = tempInput.indexOf("1)");
-				if (stringSearchIndex != -1) {
-					KilCli.setCharacter(tempInput.substring(stringSearchIndex+3, tempInput.length()), 0);
-				}
-				stringSearchIndex = tempInput.indexOf("2)");
-				if (stringSearchIndex != -1) {
-					KilCli.setCharacter(tempInput.substring(stringSearchIndex+3, tempInput.length()), 1);
-				}
-				stringSearchIndex = tempInput.indexOf("3)");
-				if (stringSearchIndex != -1) {
-					KilCli.setCharacter(tempInput.substring(stringSearchIndex+3, tempInput.length()), 2);
+				for (int chrIndex = 1; chrIndex < 10; chrIndex++)
+				{
+					stringSearchIndex = tempInput.indexOf(Integer.toString(chrIndex)+ ") ");
+					if (stringSearchIndex != -1) {
+						KilCli.setCharacter(tempInput.substring(stringSearchIndex+3, tempInput.length()), chrIndex - 1);
+					}
 				}
 			}
 
@@ -763,8 +752,6 @@ public class SendReceive implements Runnable {
 				stringSearchIndex = tempInput.indexOf("Today in Terris");
 			} else if (gameNumber == 1) {
 				stringSearchIndex = tempInput.indexOf("Today in Cosrin");
-			} else if (gameNumber == 2) {
-				stringSearchIndex = tempInput.indexOf("Today in the Old World");
 			}
 			//if the string is found, set loggedIn to 'true'
 			if (stringSearchIndex != -1) {
