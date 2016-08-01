@@ -29,11 +29,9 @@
 
 package terris.kilcli.resource;
 
-import java.io.*;
-import java.net.*;
-import javax.swing.JOptionPane;
-import terris.kilcli.KilCli;
-import terris.kilcli.thread.KilCliThread;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.net.Socket;
 
 /**
  * SMTPClient for KilCli is the class used to send bug reports<br>
@@ -47,7 +45,11 @@ public class SMTPClient {
    	private static BufferedReader is = null;
    	private static StackTraceElement[] trace;
 
+     public static void sendError(String name, Exception e) { }
+
+    /*
     public static void sendError(String name, Exception e) {
+    	
 		int n = JOptionPane.showConfirmDialog(KilCliThread.getKilCli(), "A " + e.toString() + " occurred\nDo you wish to send a error report?", "Exception Occured", JOptionPane.YES_NO_OPTION);
 		if (n != JOptionPane.YES_OPTION) {
 			return;
@@ -112,6 +114,8 @@ public class SMTPClient {
     	        is.close();
     	        smtpSocket.close();
     	    } catch (Exception ee) {}
+    	    
     	}
+    	*/
 	}
 }

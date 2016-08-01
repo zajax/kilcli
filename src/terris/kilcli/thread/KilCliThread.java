@@ -29,51 +29,43 @@
 
 package terris.kilcli.thread;
 
-import terris.kilcli.*;
-import terris.kilcli.io.*;
-import terris.kilcli.gui.*;
-import terris.kilcli.resource.*;
-import java.util.StringTokenizer;
-import java.util.List;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.StringTokenizer;
+
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import javax.swing.BoxLayout;
-import javax.swing.UIManager;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.SwingUtilities;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Image;
-import java.awt.Dialog;
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.CompoundSkin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-import com.jgoodies.plaf.plastic.Plastic3DLookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticTheme;
-import com.jgoodies.plaf.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.clearlook.ClearLookManager;
-import com.jgoodies.clearlook.ClearLookMode;
-import terris.kilcli.theme.*;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
+import terris.kilcli.KilCli;
+import terris.kilcli.resource.ExampleFileFilter;
+import terris.kilcli.theme.ContrastTheme;
+import terris.kilcli.theme.CustomTheme;
 
 
 /**
@@ -107,7 +99,8 @@ public class KilCliThread extends Thread {
      * Run method of KilCli thread, creates a KilCli object and executes it
      */
 
-    public void run() {
+    @Override
+	public void run() {
 		if (tmp != -11) {
 			play();
 		} else {
@@ -189,7 +182,7 @@ public class KilCliThread extends Thread {
 			box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
         	box.add(label);
 
-        	final int numButtons = 5;
+        	final int numButtons = 4;
         	JRadioButton[] radioButtons = new JRadioButton[numButtons];
         	final ButtonGroup group = new ButtonGroup();
 
@@ -197,24 +190,21 @@ public class KilCliThread extends Thread {
 
         	final String terrisCommand = "terris";
         	final String cosrinCommand = "cosrin";
-        	final String wolfCommand = "wolf";
+
         	final String logCommand = "log";
         	final String quitCommand = "quit";
 
         	radioButtons[0] = new JRadioButton("Play Legends of Terris");
         	radioButtons[0].setActionCommand(terrisCommand);
 
-        	radioButtons[1] = new JRadioButton("Play Legends of Cosrin");
+        	radioButtons[1] = new JRadioButton("Play Cosrin: New Dawn");
         	radioButtons[1].setActionCommand(cosrinCommand);
 
-        	radioButtons[2] = new JRadioButton("Play Wolfenburg");
-        	radioButtons[2].setActionCommand(wolfCommand);
+        	radioButtons[2] = new JRadioButton("View an existing log file");
+        	radioButtons[2].setActionCommand(logCommand);
 
-        	radioButtons[3] = new JRadioButton("View an existing log file");
-        	radioButtons[3].setActionCommand(logCommand);
-
-        	radioButtons[4] = new JRadioButton("Quit");
-        	radioButtons[4].setActionCommand(quitCommand);
+        	radioButtons[3] = new JRadioButton("Quit");
+        	radioButtons[3].setActionCommand(quitCommand);
 
         	for (int i = 0; i < numButtons; i++) {
         	    group.add(radioButtons[i]);
@@ -223,15 +213,14 @@ public class KilCliThread extends Thread {
 
 			playButton = new JButton("Do It!");
         	playButton.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
+        	    @Override
+				public void actionPerformed(ActionEvent e) {
 					if (tmp == -11) {
 						String command = group.getSelection().getActionCommand();
 						if (command == terrisCommand) {
 							tmp = 0;
 						} else if (command == cosrinCommand) {
 							tmp = 1;
-						} else if (command == wolfCommand) {
-							tmp = 2;
 						} else if (command == logCommand) {
 							tmp = 3;
 						} else {
@@ -256,7 +245,8 @@ public class KilCliThread extends Thread {
         	menu.pack();
         	menu.setSize(menu.getWidth() + 15, menu.getHeight() + 15);
         	menu.addWindowListener(new WindowAdapter() {
-        	    public void windowClosing(WindowEvent e) {
+        	    @Override
+				public void windowClosing(WindowEvent e) {
         	        System.exit(0);
         	    }
         	});
