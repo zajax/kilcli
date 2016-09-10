@@ -28,74 +28,109 @@
 
 package terris.kilcli;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JMenuBar;
-import javax.swing.JFrame;
-import javax.swing.Timer;
-import javax.swing.SwingUtilities;
-import javax.swing.JInternalFrame;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-import javax.swing.Action;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.ButtonGroup;
-import javax.swing.AbstractAction;
-import javax.swing.LookAndFeel;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.UIManager;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.event.MenuListener;
-
-import java.awt.event.InputEvent;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.io.File;
-import java.awt.Component;
-import java.awt.Image;
-import java.net.URL;
+import java.util.StringTokenizer;
 
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.CompoundSkin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import com.jgoodies.plaf.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticTheme;
-import com.jgoodies.plaf.plastic.PlasticXPLookAndFeel;
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
-import edu.stanford.ejalbert.*;
-
-import terris.kilcli.loader.*;
-import terris.kilcli.io.*;
-import terris.kilcli.resource.*;
-import terris.kilcli.thread.*;
-import terris.kilcli.window.*;
-import terris.kilcli.writer.*;
-import terris.kilcli.theme.*;
-import terris.kilcli.gui.*;
+import edu.stanford.ejalbert.BrowserLauncher;
+import terris.kilcli.gui.AliasEditor;
+import terris.kilcli.gui.ColorEditor;
+import terris.kilcli.gui.ConfigEditor;
+import terris.kilcli.gui.FilterEditor;
+import terris.kilcli.gui.HighlightEditor;
+import terris.kilcli.gui.MacroEditor;
+import terris.kilcli.gui.NicknamesEditor;
+import terris.kilcli.gui.SquelchEditor;
+import terris.kilcli.gui.TriggerEditor;
+import terris.kilcli.io.ChatIO;
+import terris.kilcli.io.HighlightStrings;
+import terris.kilcli.io.MacroParser;
+import terris.kilcli.io.Script;
+import terris.kilcli.io.SendReceive;
+import terris.kilcli.io.Squelch;
+import terris.kilcli.io.Trigger;
+import terris.kilcli.loader.AliasLoader;
+import terris.kilcli.loader.ConfigLoader;
+import terris.kilcli.loader.MacroLoader;
+import terris.kilcli.loader.NicknamesLoader;
+import terris.kilcli.loader.WindowConfigLoader;
+import terris.kilcli.resource.BASE64Decoder;
+import terris.kilcli.resource.ExampleFileFilter;
+import terris.kilcli.resource.KilCliText;
+import terris.kilcli.resource.SMTPClient;
+import terris.kilcli.theme.ContrastTheme;
+import terris.kilcli.theme.CustomTheme;
+import terris.kilcli.thread.HelpThread;
+import terris.kilcli.thread.KilCliThread;
+import terris.kilcli.thread.LogThread;
+import terris.kilcli.thread.LogViewingThread;
+import terris.kilcli.thread.MP3Thread;
+import terris.kilcli.thread.PlayThread;
+import terris.kilcli.thread.ScriptEditingThread;
+import terris.kilcli.thread.ScriptExecuteThread;
+import terris.kilcli.window.CommandLine;
+import terris.kilcli.window.EffectsPanel;
+import terris.kilcli.window.GameWindow;
+import terris.kilcli.window.HandsPanel;
+import terris.kilcli.window.HardenPanel;
+import terris.kilcli.window.HelpWindow;
+import terris.kilcli.window.InfoPanel;
+import terris.kilcli.window.KilCliInternalFrame;
+import terris.kilcli.window.MovementPanel;
+import terris.kilcli.window.SplashWindow;
+import terris.kilcli.window.StatusBar;
+import terris.kilcli.window.StatusBarHor;
+import terris.kilcli.window.TimersPanel;
+import terris.kilcli.writer.AliasWriter;
+import terris.kilcli.writer.ConfigWriter;
+import terris.kilcli.writer.FilterWriter;
+import terris.kilcli.writer.HighlightWriter;
+import terris.kilcli.writer.MacroWriter;
+import terris.kilcli.writer.NicknamesWriter;
+import terris.kilcli.writer.SquelchWriter;
+import terris.kilcli.writer.TriggerWriter;
+import terris.kilcli.writer.WindowConfigWriter;
 
 /**
  * KilCli for KilCli is the "main" section for KilCli<br>
@@ -103,12 +138,12 @@ import terris.kilcli.gui.*;
  */
 
 public class KilCli extends JFrame implements ActionListener {
-	private static final String VERSION = "KilCli - 1.0.2";
+	private static final String VERSION = "KilCli - 1.0.3";
 
 	//connection variables
 	private static boolean loggedIn = false;
 	private static SendReceive sendReceive;
-	private static ChatIO chatIO;
+	//private static ChatIO chatIO;
 	private static int gameNumber = 0;
 
 	//gui & window variables
@@ -189,7 +224,7 @@ public class KilCli extends JFrame implements ActionListener {
 	private static boolean sounds = true;
 	private static String profile = "";
 	private static boolean checkHarden = false;
-	private static boolean chatToKchat = false;
+	//private static boolean chatToKchat = false;
 
 	//arrow key command recall variables
 	private static String[] lastCommands;
@@ -198,7 +233,7 @@ public class KilCli extends JFrame implements ActionListener {
 	private static int commandDirection = 2;
 
 	//system vars
-	private static String[] characters = new String[3];
+	private static String[] characters = new String[10];
 	private static int quitFlag = -1;
 	private static String name;
 	private static LogThread log;
@@ -264,6 +299,7 @@ public class KilCli extends JFrame implements ActionListener {
 
     	//unbalanced timer
     	unbalanced = new Timer(1000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer--;
 				if (!status.isClosed()) {
@@ -292,6 +328,7 @@ public class KilCli extends JFrame implements ActionListener {
 
     	//spam timer
     	spamTimer = new Timer(1000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				spamCount--;
 				if (!timers.isClosed()) {
@@ -312,6 +349,7 @@ public class KilCli extends JFrame implements ActionListener {
 
     	//stunned, held, entangled, webbed timer
     	stunned = new Timer(1000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				stunTime--;
 				if (!timers.isClosed()) {
@@ -332,6 +370,7 @@ public class KilCli extends JFrame implements ActionListener {
 
     	//slowed, confused, pacified timer
     	slowed = new Timer(1000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				slowTime--;
 				if (!timers.isClosed()) {
@@ -352,7 +391,8 @@ public class KilCli extends JFrame implements ActionListener {
 
         //Quit this app when the big window closes.
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+            @Override
+			public void windowClosing(WindowEvent e) {
 				int n = JOptionPane.showConfirmDialog(KilCliThread.getKilCli(), "Are you sure you wish to quit?", "Quit?", JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
 					exit("quit");
@@ -399,7 +439,8 @@ public class KilCli extends JFrame implements ActionListener {
 		//set a listener to know when disconnect has been selected
 		mi.addActionListener(new ActionListener() {
 			//function to exit program
-		    public void actionPerformed(ActionEvent e) {
+		    @Override
+			public void actionPerformed(ActionEvent e) {
 				disconnect("quit", 0);
 		    }
 		});
@@ -408,6 +449,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi= new JMenuItem("Reconnect");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				reconnect();
 			}
@@ -419,6 +461,7 @@ public class KilCli extends JFrame implements ActionListener {
         //set a listener to know when view log file has been selected
         mi.addActionListener(new ActionListener() {
 			//function to view log file
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Runtime.getRuntime().exec("java -jar KilCli.jar log");
@@ -436,7 +479,8 @@ public class KilCli extends JFrame implements ActionListener {
         //set a listener to know when exit has been selected
         mi.addActionListener(new ActionListener() {
            	//function to exit program
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
 				exit("quit");
             }
         });
@@ -450,6 +494,7 @@ public class KilCli extends JFrame implements ActionListener {
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         //creates "cut" menu that gets text from highlighted window
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JInternalFrame tmp = desktop.getSelectedFrame();
 				if (tmp.equals(command)) {
@@ -466,6 +511,7 @@ public class KilCli extends JFrame implements ActionListener {
         //creates a "copy" menu that gets text from highlighted window
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (desktop.getSelectedFrame() instanceof GameWindow) {
 					GameWindow tmp = (GameWindow)desktop.getSelectedFrame();
@@ -479,6 +525,7 @@ public class KilCli extends JFrame implements ActionListener {
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         //creates a "paste" menu that pastes into the commandLine
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				command.paste();
 			}
@@ -489,6 +536,7 @@ public class KilCli extends JFrame implements ActionListener {
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         //creates a "select all" menu that selects all the text of the highlighted window
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (desktop.getSelectedFrame() instanceof GameWindow) {
 					GameWindow tmp = (GameWindow)desktop.getSelectedFrame();
@@ -533,6 +581,7 @@ public class KilCli extends JFrame implements ActionListener {
         //Item for the most common windows
         mi = new JMenuItem("Comm & Status Bars");
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				command.removeBar();
 				status.removeBar();
@@ -550,6 +599,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Item to remove the bars from all windows
         mi = new JMenuItem("All Title Bars");
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				chats.removeBar();
 				game.removeBar();
@@ -582,6 +632,7 @@ public class KilCli extends JFrame implements ActionListener {
         //Restore the most commonly removed bars
         mi = new JMenuItem("Comm & Status Bars");
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				command.restoreBar();
 				status.restoreBar();
@@ -599,6 +650,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//restore all bars
         mi = new JMenuItem("All Title Bars");
         mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				chats.restoreBar();
 				game.restoreBar();
@@ -644,6 +696,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates an AliasEditor for graphical editing of aliases
 		mi = new JMenuItem("Alias Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				AliasEditor alias = new AliasEditor();
 			}
@@ -653,6 +706,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a SquelchEditor for graphica editing of squelches
 		mi = new JMenuItem("Client Side Squelches");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				SquelchEditor squelch = new SquelchEditor();
 			}
@@ -662,6 +716,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a ColorEditor for graphical editing of colors
 		mi = new JMenuItem("Color Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ColorEditor co = new ColorEditor();
 			}
@@ -671,6 +726,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a ConfigEditor for graphical editing of the configuration
 		mi = new JMenuItem("Config Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ConfigEditor c = new ConfigEditor();
 			}
@@ -680,6 +736,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a HighlightEditor for graphical editing of the highlight strings
 		mi = new JMenuItem("Highlight Strings");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				HighlightEditor h = new HighlightEditor();
 			}
@@ -689,6 +746,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a MacroEditor for graphical editing of macros
 		mi = new JMenuItem("Macro Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				MacroEditor macro = new MacroEditor();
 			}
@@ -698,6 +756,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a NicknameEditor for graphical editing of nicknames
 		mi = new JMenuItem("Nickname Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				NicknamesEditor nicks = new NicknamesEditor();
 			}
@@ -707,6 +766,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a FilterEditor for graphical editing of text filters
 		mi = new JMenuItem("Text Filtering Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				FilterEditor filter = new FilterEditor();
 			}
@@ -716,6 +776,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//Creates a TriggerEditor for graphical editing of triggers
 		mi = new JMenuItem("Trigger Options");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				TriggerEditor trig = new TriggerEditor();
 			}
@@ -730,6 +791,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi = new JMenuItem("Create New Profile");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				newProfile();
 			}
@@ -738,6 +800,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi = new JMenuItem("Copy Profile to New Profile");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				copyProfile();
 			}
@@ -755,6 +818,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi = new JMenuItem("Script Editor");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ScriptEditingThread("Script Editor").start();
 			}
@@ -763,6 +827,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi = new JMenuItem("Run Script");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog(KilCliThread.getKilCli(), "Enter the name of the script to run:");
 			    if ((name != null) && (name.length() > 0)) {
@@ -775,21 +840,19 @@ public class KilCli extends JFrame implements ActionListener {
 		//The help menu with many web browser links
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
-		helpMenu.add(webpageMenuItem("KilCli Homepage", "http://www.kilcli.com"));
-		helpMenu.add(webpageMenuItem("KilCli Support Board", "http://forums.kilcli.com"));
-		helpMenu.addSeparator();
+		//helpMenu.add(webpageMenuItem("KilCli Homepage", "http://www.kilcli.com"));
+		//helpMenu.add(webpageMenuItem("KilCli Support Board", "http://forums.kilcli.com"));
+		//helpMenu.addSeparator();
 		helpMenu.add(webpageMenuItem("Legends of Terris Homepage", "http://www.legendsofterris.com"));
-		helpMenu.add(webpageMenuItem("Terris Message Board", "http://boards.legendsofterris.com"));
+		helpMenu.add(webpageMenuItem("Terris Message Board", "http://www.legendsofterris.com/forums"));
 		helpMenu.addSeparator();
-		helpMenu.add(webpageMenuItem("Legends of Cosrin Homepage", "http://www.legendsofcosrin.com"));
-		helpMenu.add(webpageMenuItem("Cosrin Message Board", "http://boards.legendsofcosrin.com"));
-		helpMenu.addSeparator();
-		helpMenu.add(webpageMenuItem("Wolfenburg Homepage", "http://www.wolfenburg.com"));
-		helpMenu.add(webpageMenuItem("Wolfenburg Message Board", "http://boards.wolfenburg.com"));
+		helpMenu.add(webpageMenuItem("Legends of Cosrin Homepage", "http://www.cosrintwo.com"));
+		helpMenu.add(webpageMenuItem("Cosrin Message Board", "http://www.cosrintwo.com/forums"));
 		helpMenu.addSeparator();
 
 		mi = new JMenuItem("License Agreement");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				license();
 			}
@@ -799,6 +862,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		mi = new JMenuItem("About");
 		mi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				about();
 			}
@@ -828,6 +892,7 @@ public class KilCli extends JFrame implements ActionListener {
 		JMenuItem tmp = new JMenuItem(name);
 		final String finalURL = url;
 		tmp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					BrowserLauncher.openURL(finalURL);
@@ -855,6 +920,7 @@ public class KilCli extends JFrame implements ActionListener {
         tmp = new JMenuItem(name);
 		//set a listener to know when the internal frame has been selected
 		tmp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				checkWindow(n);
 			}
@@ -990,6 +1056,7 @@ public class KilCli extends JFrame implements ActionListener {
 					mi2.setSelected(true);
 				}
 				mi2.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						int tmp = e.toString().lastIndexOf('=') + 1;
 						String tmpString = e.toString().substring(tmp, (e.toString().length() - 1));
@@ -1252,6 +1319,7 @@ public class KilCli extends JFrame implements ActionListener {
 			if (file.isDirectory()) {
 				JMenuItem mi = new JMenuItem(files[i]);
 				mi.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						int tmp = e.toString().lastIndexOf('=') + 1;
 						String tmpString = e.toString().substring(tmp, (e.toString().length() - 1));
@@ -1390,9 +1458,9 @@ public class KilCli extends JFrame implements ActionListener {
 			"2002 - 2004 Jason Baumeister<br>" +
 			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved.</font></p>" +
 			"<b>" +
-			"<p>Terris, Cosrin, Wolfenburg</p>" +
+			"<p>Terris, Cosrin</p>" +
 			"</b><font SIZE=\"3\">" +
-			"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright &copy; 1995-2002 " +
+			"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright &copy; 1995-2016 " +
 			"Doug Goldner and Paul Barnett<br>" +
 			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved.</p>" +
 			"</font>" +
@@ -1777,8 +1845,8 @@ public class KilCli extends JFrame implements ActionListener {
 		Runnable doSetProfile = null;
 		if (loggedIn) {
 			if (options[84].equalsIgnoreCase("true")) {
-				chatIO = new ChatIO();
-				chatIO.start();
+				//chatIO = new ChatIO();
+				//chatIO.start();
 			}
 			File srcFile = new File("config");
 			String[] files = srcFile.list();
@@ -1787,7 +1855,8 @@ public class KilCli extends JFrame implements ActionListener {
 				if (file.isDirectory()) {
 					if (file.getName().equals(getUsedCharacter())) {
  						doSetProfile = new Runnable() {
- 						    public void run() {
+ 						    @Override
+							public void run() {
          						KilCliThread.getKilCli().setProfile(getUsedCharacter());
 								game.scrollToBottom();
 								if (getLogonScript().length() > 0) {
@@ -2467,18 +2536,23 @@ public class KilCli extends JFrame implements ActionListener {
 					//if its S, check the HPs and SPs to see if a warning is needed
 					case 'S':
 						//get Integers from the string
-						st = new StringTokenizer(input.substring(3, input.length()));
-						HPs = Integer.parseInt(st.nextToken());
-						maxHPs = Integer.parseInt(st.nextToken());
-						SPs = Integer.parseInt(st.nextToken());
-						maxSPs = Integer.parseInt(st.nextToken());
+						//
+						//  hp   maxhpsp   maxsppsi  maxpsi 
+						//]S123451234512345612345    5    5    0    0
+						//          1         2         3         4
+						//012345678901234567890123456789012345678901
+						
+						HPs = Integer.parseInt(input.substring(2, 2+5).trim());
+						maxHPs = Integer.parseInt(input.substring(7, 7+5).trim());
+						SPs = Integer.parseInt(input.substring(12, 12+5).trim());
+						maxSPs = Integer.parseInt(input.substring(17, 17+5).trim());
 
 						//create percentages of max HPs and SPs
 						if (options[2].toLowerCase().equals("true")) {
-							percentHP = java.lang.Math.round((float)((float)HPs / (float)maxHPs) * (float)100.0);
+							percentHP = java.lang.Math.round((float)HPs / (float)maxHPs * (float)100.0);
 						}
 						if (options[3].toLowerCase().equals("true")) {
-							percentSP = java.lang.Math.round((float)((float)SPs / (float)maxSPs) * (float)100.0);
+							percentSP = java.lang.Math.round((float)SPs / (float)maxSPs * (float)100.0);
 						}
 
 						//test if we should give an HP or SP warning
@@ -2523,7 +2597,7 @@ public class KilCli extends JFrame implements ActionListener {
 			} else if (previewChar < 122) {
 
 				switch(previewChar) {
-					//if its W, its a staff member playing a stupid fucking sound
+					//if its W, its a staff member playing a stupid sound
 					case 'W':
 						String file = input.substring(2, input.length() - 1);
 						File sound = new File(options[39] + file + ".mp3");
@@ -2645,6 +2719,7 @@ public class KilCli extends JFrame implements ActionListener {
 	 * @param evt ActionEvent created by textfield
 	 */
 
+	@Override
 	public void actionPerformed(ActionEvent evt) {
     }
 
@@ -2756,14 +2831,16 @@ public class KilCli extends JFrame implements ActionListener {
 			error = false;
 		} else {
         	// So you want to quit?
+			
+			checkSendText(temp);
+			
         	if ("quit".equalsIgnoreCase(temp) || "qq".equalsIgnoreCase(temp)) {
         	    // Let's be nice
         	    //send quit command to game
         	    gameWrite("<b>Goodbye!</b>");
+        	    
 				exit(temp);
-        	} else {
-				checkSendText(temp);
-			}
+        	}
 		}
     }
 
@@ -2775,10 +2852,13 @@ public class KilCli extends JFrame implements ActionListener {
 
 	public static void checkSendText(String text) {
 		lowerCase = text.toLowerCase();
+		
 		String chat = "kchat ";
-		if (chatToKchat) {
+		/*		 
+		 if (chatToKchat) {
 			chat = "chat ";
-		}
+		 }
+		 */
 		if (lowerCase.startsWith("etell ")) {
 			text = chat + "/tell " + text.substring(6, text.length());
 			lowerCase = text.toLowerCase();
@@ -2788,8 +2868,10 @@ public class KilCli extends JFrame implements ActionListener {
         if ((lowerCase.startsWith("whofull")) || (lowerCase.startsWith("kl")) || (lowerCase.startsWith("qwf")) || (lowerCase.startsWith("where"))) {
 			spamCount = 62;
 			timers.UpdateSpamTimer(spamCount);
-			spamTimer.start();
-		} else if (lowerCase.startsWith(chat)) {
+			spamTimer.start();	
+		}
+        /*
+        else if (lowerCase.startsWith(chat)) {
 			text = text.substring(chat.length(), text.length());
 			chatIO.write(text);
 			//local echo
@@ -2810,7 +2892,8 @@ public class KilCli extends JFrame implements ActionListener {
 				game.skipHighlight(false);
 			}
 			return;
-		} else if (lowerCase.startsWith("tchat ")) {
+		} */ 
+		else if (lowerCase.startsWith("tchat ")) {
 			text = text.substring(1, text.length());
 		} else if (text.length() > 4) {
            	//So you want help?
@@ -2937,6 +3020,7 @@ public class KilCli extends JFrame implements ActionListener {
 				} else {
 					final KeyStroke keystroke = KeyStroke.getKeyStroke(i0);
 					desktop.registerKeyboardAction((new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
 							String tempString = (String)(macros.get(i1));
 							if (!((i0.startsWith("alt")) || (i0.startsWith("shift")) || (i0.startsWith("control")) || (i0.startsWith("meta")) || (i0.startsWith("button1")))) {
@@ -2960,6 +3044,7 @@ public class KilCli extends JFrame implements ActionListener {
 		final String i0 = keys;
 		KeyStroke key = KeyStroke.getKeyStroke(keys);
 		ActionListener keyActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (!((i0.startsWith("alt")) || (i0.startsWith("shift")) || (i0.startsWith("control")) || (i0.startsWith("meta")) || (i0.startsWith("button1")))) {
 					if (command.textfield.hasFocus()) {
@@ -2982,6 +3067,7 @@ public class KilCli extends JFrame implements ActionListener {
 		final String i0 = keys;
 		KeyStroke key = KeyStroke.getKeyStroke(keys);
 		ActionListener keyActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (!((i0.startsWith("alt")) || (i0.startsWith("shift")) || (i0.startsWith("control")) || (i0.startsWith("meta")) || (i0.startsWith("button1")))) {
 					if (command.textfield.hasFocus()) {
@@ -3004,6 +3090,7 @@ public class KilCli extends JFrame implements ActionListener {
 		final String i0 = keys;
 		KeyStroke key = KeyStroke.getKeyStroke(keys);
 		ActionListener keyActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (!((i0.startsWith("alt")) || (i0.startsWith("shift")) || (i0.startsWith("control")) || (i0.startsWith("meta")) || (i0.startsWith("button1")))) {
 					if (command.textfield.hasFocus()) {
@@ -3043,7 +3130,8 @@ public class KilCli extends JFrame implements ActionListener {
 		 final String i0 = keys;
 		 KeyStroke key = KeyStroke.getKeyStroke(keys);
 		 ActionListener keyActionListener = new ActionListener() {
-			 public void actionPerformed(ActionEvent actionEvent) {
+			 @Override
+			public void actionPerformed(ActionEvent actionEvent) {
 				if (!((i0.startsWith("alt")) || (i0.startsWith("shift")) || (i0.startsWith("control")) || (i0.startsWith("meta")) || (i0.startsWith("button1")))) {
 					if (command.textfield.hasFocus()) {
 						command.consume();
@@ -3063,6 +3151,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//if pageup is pressed, game window pages up
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0);
 		ActionListener keyActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				game.pageUp();
 			}
@@ -3071,6 +3160,7 @@ public class KilCli extends JFrame implements ActionListener {
 		//if ctrl-home is pressed, text focus goes to the command line
 		KeyStroke key2 = KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0);
 		ActionListener keyActionListener2 = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				game.pageDown();
 			}
@@ -3105,6 +3195,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		//actions for the up arrow
 		ActionListener upActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 
 		  		//check if there is text in the command line
@@ -3147,6 +3238,7 @@ public class KilCli extends JFrame implements ActionListener {
 
 		//actions for the down arrow
 		ActionListener downActionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 		  		//check if there is text in the command line
 		  		String tmp = command.textfield.getText();
@@ -3456,7 +3548,7 @@ public class KilCli extends JFrame implements ActionListener {
 		options[21] = o[21];
 		if (sendReceive != null) {
 			sendReceive.setTrigger(o[21].equalsIgnoreCase("true"));
-			ChatIO.setTrigger(o[21].equalsIgnoreCase("true"));
+			//ChatIO.setTrigger(o[21].equalsIgnoreCase("true"));
 		}
 		options[22] = o[22];
 		options[23] = o[23];
@@ -3530,7 +3622,7 @@ public class KilCli extends JFrame implements ActionListener {
 		options[81] = o[81];
 		checkHarden = options[81].equalsIgnoreCase("true");
 		options[82] = o[82];
-		chatToKchat = options[82].equalsIgnoreCase("true");
+		//chatToKchat = options[82].equalsIgnoreCase("true");
 		options[83] = o[83];
 		options[84] = o[84];
 		options[85] = o[85];
@@ -4126,8 +4218,9 @@ public class KilCli extends JFrame implements ActionListener {
 				} else if (commandString.equalsIgnoreCase("chat")) {
 					if (st.hasMoreTokens()) {
 						commandString = st.nextToken();
+						
 						if (commandString.equalsIgnoreCase("reconnect")) {
-							if ((chatIO != null) && (chatIO.isRunning())) {
+						/*	if ((chatIO != null) && (chatIO.isRunning())) {
 								gameWrite("already connected to KilCli Chat Server");
 							} else {
 								if (chatIO == null) {
@@ -4135,6 +4228,7 @@ public class KilCli extends JFrame implements ActionListener {
 								}
 								chatIO.start();
 							}
+						*/
 						} else {
 							gameWrite("<br><b>Error! Unknown chat command: </b>" + text);
 							gameWrite("<u><b>Valid chat commands are:</b></u>");
@@ -4400,7 +4494,7 @@ public class KilCli extends JFrame implements ActionListener {
 							checkHarden = value.equalsIgnoreCase("true");
 						} else if (property.equalsIgnoreCase("chattokchat")) {
 							options[82] = value;
-							chatToKchat = value.equalsIgnoreCase("true");
+							//chatToKchat = value.equalsIgnoreCase("true");
 						} else if (property.equalsIgnoreCase("numpadentersendcommand")) {
 							options[83] = value;
 							CommandLine.numpadEnterSendsCommand(options[83].equalsIgnoreCase("true"));
@@ -4717,7 +4811,7 @@ public class KilCli extends JFrame implements ActionListener {
 							ArrayList tmp = ScriptExecuteThread.getList();
 							gameWrite("<br><b><u>List of Scripts Currently Executing:</u></b>");
 							for (int i = 0; i < tmp.size(); i++) {
-								gameWrite((i+1) + ". " + (Script)(tmp.get(i)));
+								gameWrite((i+1) + ". " + (tmp.get(i)));
 							}
 							gameWrite("");
 						} else if (property.equalsIgnoreCase("variables")) {
@@ -4800,9 +4894,9 @@ public class KilCli extends JFrame implements ActionListener {
 		boolean flag = true;
 
 		if (!(quit.equals("true"))) {
-			if (chatIO != null) {
-				chatIO.disconnect("");
-			}
+			//if (chatIO != null) {
+//				chatIO.disconnect("");
+	//		}
 			if (loggedIn) {
 				flag = sendReceive.disconnect(quit);
 			}
@@ -4968,7 +5062,8 @@ public class KilCli extends JFrame implements ActionListener {
 	    	this.plaf = plaf;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
 	    	if (name != null) {
 	    		kilcli.options[20] = name;
 			}

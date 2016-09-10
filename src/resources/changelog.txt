@@ -1,5 +1,14 @@
 Change Log -
 
+Version - 1.0.3
+-Modified the Hp/Sp parsing
+-Updated the web page links
+-Removed Wolfenburg option
+-Updated Cosrin to Cosrin New Dawn
+-Updated fall back IP addresses
+-Removed some connections to the old .com site which is no longer present (error reporting - chat server)
+-Updated supported characters to 9
+
 Version - 1.0.2
 -Added KilCli Chat Server integration
 -Added option to route all "chat" commands to "kchat"
