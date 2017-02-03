@@ -2,3 +2,8 @@ Kilcli.iml
 .idea
 .settings
 dist
+.classpath
+.projet
+kilcli.log
+kilclierr.log
+bin
