@@ -1,5 +1,0 @@
-G:e;;w;;e;;w;;ch
-C:%
-C:if HPs < 100|1
-G:1
-C:script ogres

@@ -1,2 +1,0 @@
-Terris Comings and goings: |null|True|False|
-Terris Event: |null|True|False|
