@@ -205,7 +205,7 @@ public class SendReceive implements Runnable {
 		//attempts to establish a connection
 		try {
 			if (gameNumber == 0) {
-				server = "ogcserver02.onlinegamescompany.net";								
+				server = "terris.spiritualkarma.co.uk";
 				port = 31000;
 			} else if (gameNumber == 1) {
 				server = "play.cosrintwo.com";
@@ -220,7 +220,7 @@ public class SendReceive implements Runnable {
 			try {
 				connSock.close();
 				if (gameNumber == 0) {
-					server = "217.35.88.197";
+					server = "139.162.245.156";
 				} else if (gameNumber == 1) {
 					server = "81.143.167.18";
 				}
