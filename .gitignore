@@ -7,3 +7,4 @@ dist
 kilcli.log
 kilclierr.log
 bin
+.DS_Store
